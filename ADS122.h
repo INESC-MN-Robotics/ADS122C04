@@ -24,7 +24,7 @@
 union Byte3 {
   unsigned long int code;
   byte bytes[3];
-};
+}; //Union - converts 3 bytes into an unsigned long int
 
 class ADS122 {
   private:
@@ -38,7 +38,7 @@ class ADS122 {
   
   public:
     //VARIABLES
-    Byte3 acq;         
+    Byte3 acq; //Stores the read acquisition value         
     //FUNCTIONS
     ADS122(byte address);
 };

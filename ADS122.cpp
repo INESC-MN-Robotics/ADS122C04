@@ -5,7 +5,7 @@
 byte ADS122::readreg(byte f_address){
   //Reads a requested ADC register
   //INPUT PARAMETERS
-  //byte f_address -> Register address to be written - USE THE MACROS TO SELECT YOUR REGISTER
+  //byte f_address -> Register address to be written
   //RETURN
   //Read register value
   byte reg;
@@ -39,6 +39,12 @@ void ADS122::panic(){
 }
 
 void ADS122::writereg(byte f_address, byte message){
+  //Writes a message on an ADC register
+  //INPUT PARAMETERS
+  // f_address -> Register address to be written
+  // message -> Content to be written on the register
+  //Does not return 
+  
   byte result;
   #if ADS122_DEBUG==1
   Serial.print("Writing register 0x");
@@ -73,6 +79,9 @@ void ADS122::writereg(byte f_address, byte message){
 }
 
 ADS122::ADS122(byte f_address){
+  //ADS122 class constructor
+  //INPUT PARAMETERS
+  //ADC I2C address
   Wire.begin();
   this->address = f_address;
   Wire.beginTransmission(address);
