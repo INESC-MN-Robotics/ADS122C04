@@ -1,6 +1,7 @@
 # ADS122C04 ARDUINO LIBRARY
 
-[![N|Solid](https://sites.google.com/site/inescmn/_/rsrc/1515405487198/config/customLogo.gif?revision=68)](http://inesc-mn.pt/)
+[![N|Solid](https://sites.google.com/site/inescmn/_/rsrc/1515405487198/config/customLogo.gif?revision=68 =250x250)](http://inesc-mn.pt/)
+
 This is a library to easily program, configure and operate the recently released ADS122C04 analog-to-digital converter produced by Texas Instruments. This work is currently in early development, but feel free to give suggestions and contribute!
 
 ## Getting Started
