@@ -1,3 +1,11 @@
+////////////////////////////////////////////////////////////////
+// ADS122.cpp
+// Arduino library to program and configure the ADS122C04 chip from TEXAS INSTRUMENTS
+// Developed by: Pedro Ribeiro
+//
+// INESC-MN, 2018
+////////////////////////////////////////////////////////////////
+
 #ifndef ADS122_h
 #define ADS122_h
 
@@ -5,7 +13,7 @@
 #include <Wire.h>
 
 //DEBUGGING
-#define ADS122_DEBUG 1
+#define ADS122_DEBUG 0 //Define this macro as 1 to enable verbose output
 
 //REGISTER ADDRESSES
 #define ADS122_REG0 0x0 
@@ -146,6 +154,8 @@ class ADS122 {
     void init(byte f_address);
     void set(byte f_address, byte message);
     void reset();
+    void measure(bool pinwait, int drd);
+    Byte3 read();
 };
 
 

@@ -1,75 +1,37 @@
-// I2C Digital Potentiometer
-// by Nicholas Zambetti <http://www.zambetti.com>
-// and Shawn Bonkowski <http://people.interaction-ivrea.it/s.bonkowski/>
+// ADS122C04 single measurement channel
+// by Pedro Ribeiro, INESC-MN, 2018
 
-// Demonstrates use of the Wire library
-// Controls AD5171 digital potentiometer via I2C/TWI
+// Demonstrates how to program, and acquire data
+// with the ADS122C04 adc with I2C communication
 
-// Created 31 March 2006
-
-// This example code is in the public domain.
+// Created 10 April 2018
 
 // This example code is in the public domain.
 
+//Required libraries
+#include <Wire.h> //Controls and mediates I2C communication
+#include "ADS122.h" //Allows ADS122C04 programming
 
-#include <Wire.h>
-#include "ADS122.h"
+#define ADC_ADDRESS 0x40 //ADS122C04 I2C address
 
-#define ADC_ADDRESS 0x40
-
-ADS122 adc;
+ADS122 adc; //Define an instance of the ADS122 class as a global variable.
 
 void setup() {
-  //Wire.begin(); // join i2c bus (address optional for master)
-  Serial.begin(2000000);
-  Wire.begin();
-  Serial.println("WOKE");
-  adc.init(byte(ADC_ADDRESS));
+  Serial.begin(2000000); //Initialize UART communication
+  Wire.begin(); //Initialize I2C communication
+  #if ADS122_DEBUG==1 
+  Serial.println("Arduino up from powerdown state");
+  #endif
+  adc.init(byte(ADC_ADDRESS)); //Initialize the ADS122 instance, using the I2C address as input argument
   delay(1000);
-  //adc.reset();
-  //Wire.beginTransmission(byte(ADC_ADDRESS));
-  //Wire.write(byte(0x06));
-  //Wire.endTransmission();
-  adc.set(byte(ADS122_REG0),byte(ADS122_MUX_IN3|ADS122_GAIN_1|ADS122_PGA_DISABLED));
-  //Wire.beginTransmission(byte(ADC_ADDRESS));
-  //Wire.write(byte(0x40));
-  //Wire.write(byte(0xB1));
-  //Wire.endTransmission();
-  //Serial.println("Writing 0xB1 on register 0x00");
+  //Configure register 0. This configuration configures the ADC to measure the voltage from channel 3 as
+  //a single ended input, with gain 1 and disables the internal programmable gain amplifier (PGA)
+  adc.set(byte(ADS122_REG0),byte(ADS122_MUX_IN3|ADS122_GAIN_1|ADS122_PGA_DISABLED)); 
   delay(100);
-  //Wire.beginTransmission(byte(ADC_ADDRESS));
-  //Wire.write(byte(0x20));
-  //Wire.endTransmission();
-  //Wire.requestFrom(byte(ADC_ADDRESS),1);
-  //while(Wire.available()){
-//    response = Wire.read();
-//    Serial.print("Response: 0x");
-//    Serial.println(response,HEX);
-//  }
-//  delay(100);
-    adc.set(byte(ADS122_REG1),byte(ADS122_DR_1000|ADS122_MODE_TURBO|ADS122_CM_SINGLE|ADS122_VREF_INTERNAL|ADS122_TS_DISABLED));
-//  Wire.beginTransmission(byte(ADC_ADDRESS));
-//  Wire.write(byte(0x44));
-//  Wire.write(byte(0xD0));
-//  Wire.endTransmission();
-//  Serial.println("Writing 0x04 on register 0x01");
-//  delay(100);
-//  Wire.beginTransmission(byte(ADC_ADDRESS));
-//  Wire.write(byte(0x24));
-//  Wire.endTransmission();
-//  Wire.requestFrom(byte(ADC_ADDRESS),1);
-//  while(Wire.available()){
-//    response = Wire.read();
-//    Serial.print("Response: 0x");
-//    Serial.println(response,HEX);
-//  }
-
-  delay(500);
-
-  while(true){
-    Serial.println("Done");
-    delay(5000);
-  }
+  //Configure register 1. This sets the acquisition speed to 2000 SPS (2x1000 SPS, because TURBO mode is on), the
+  //measurement mode to single, disables the internal temperature sensor and sets the ADC voltage reference to the internal reference (2.048 V)
+  adc.set(byte(ADS122_REG1),byte(ADS122_DR_1000|ADS122_MODE_TURBO|ADS122_CM_SINGLE|ADS122_VREF_INTERNAL|ADS122_TS_DISABLED));
+  delay(1000);
 }
 
 byte val = 0;
@@ -78,63 +40,24 @@ Byte3 result;
 
 void loop() {
 
-  int exp_bytes = 3;
-  double voltage = 0;
   Byte3 result;
-  result.code = 0;
 
-  //READ CHANNEL 1
-  Wire.beginTransmission(byte(ADC_ADDRESS));
-  Wire.write(byte(0x40));
-  Wire.write(byte(0xB1));
-  Wire.endTransmission();
-  //delay(100);
-  
-  Wire.beginTransmission(byte(ADC_ADDRESS));
-  Wire.write(byte(0x08));
-  Wire.endTransmission();
-  delay(1);
+  //Order the ADC to measure.
+  //ADS122::measure accepts a bool and an unsigned interger as arguments. 
+  //If the first argument is false, the function will wait for the amount of miliseconds in the second argument
+  //for the measurement to finish
+  //If the first argument is true, the function will wait for the pin in the second argument to go LOW
+  //to acknowledge the measurement is finished
+  adc.measure(false, 50);
 
-  Wire.beginTransmission(byte(ADC_ADDRESS));
-  Wire.write(byte(0x10));
-  Wire.endTransmission();
-  Wire.requestFrom(byte(ADC_ADDRESS),exp_bytes);
-  exp_bytes = exp_bytes -1;
-  while(Wire.available()){
-    result.bytes[exp_bytes] = Wire.read();
-    exp_bytes--;
-  }
-  exp_bytes = 3;
-  Serial.print(result.code,DEC);
-  //voltage = double(result.code)/double(pow(2,24))*2.048;
-  //Serial.println(voltage,DEC);
+  //Order the ADC to transmit the read value.
+  //This function returns a Byte3 union (defined in ADS122.h)
+  result = adc.read();
 
-  Serial.print("\t");
-
-  //READ CHANNEL 2
-  Wire.beginTransmission(byte(ADC_ADDRESS));
-  Wire.write(byte(0x40));
-  Wire.write(byte(0xA1));
-  Wire.endTransmission();
-  //delay(100);
-  
-  Wire.beginTransmission(byte(ADC_ADDRESS));
-  Wire.write(byte(0x08));
-  Wire.endTransmission();
-  delay(1);
-
-  Wire.beginTransmission(byte(ADC_ADDRESS));
-  Wire.write(byte(0x10));
-  Wire.endTransmission();
-  Wire.requestFrom(byte(ADC_ADDRESS),exp_bytes);
-  exp_bytes = exp_bytes -1;
-  while(Wire.available()){
-    result.bytes[exp_bytes] = Wire.read();
-    exp_bytes--;
-  }
-
+  //The result is stored in the Byte3 union. To be recognized as an integer,
+  //request the Byte3.code element. This element can then be printed to the 
+  //serial port. 
   Serial.println(result.code,DEC);
-  delay(50);
 
 }
 
