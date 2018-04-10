@@ -17,6 +17,7 @@ byte ADS122::readreg(byte f_address){
   Wire.beginTransmission(this->address);
   Wire.write(byte(ADS122_READREG)|f_address);
   Wire.endTransmission();
+  Wire.requestFrom(byte(f_address),1);
   while(Wire.available()){
     reg = Wire.read();
   }
@@ -33,8 +34,8 @@ void ADS122::panic(){
   //Does not return
     while(1){
       Serial.println("Critical condition reached - the firmware is unable to continue safely!");
-      Serial.println("Please restart the ARDUINO");
-      delay(1000);
+      Serial.println("Check your hardware and firmware - then restart your arduino");
+      delay(5000);
     }
 }
 
