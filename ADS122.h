@@ -141,10 +141,13 @@ class ADS122 {
   
   public:
     //VARIABLES
-    Byte3 acq; //Stores the read acquisition value         
+
     //FUNCTIONS
-    ADS122(byte address);
+    void init(byte f_address);
+    void set(byte f_address, byte message);
+    void reset();
 };
 
 
 #endif
+

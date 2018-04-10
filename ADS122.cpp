@@ -78,22 +78,41 @@ void ADS122::writereg(byte f_address, byte message){
   
 }
 
-ADS122::ADS122(byte f_address){
+void ADS122::init(byte f_address){
   //ADS122 class constructor
   //INPUT PARAMETERS
   //ADC I2C address
-  Wire.begin();
+  //Serial.println("Initializing...");
+  #if ADS122_DEBUG == 1
+  Serial.println("Initializing...");
+  #endif
+  Serial.println("Passou1");
   this->address = f_address;
-  Wire.beginTransmission(address);
+  Serial.println("Passou2");
+  Wire.beginTransmission(f_address);
   Wire.write(byte(ADS122_RESET));
   Wire.endTransmission();
+  Serial.println("Passou3");
   this->reg[3] = this->readreg(ADS122_REG3);
   this->reg[2] = this->readreg(ADS122_REG2);
   this->reg[2] = this->readreg(ADS122_REG1);
   this->reg[1] = this->readreg(ADS122_REG0);
-  this->acq.code = 0;
+  Serial.println("Passou4");
 }
 
+void ADS122::set(byte f_address, byte message){
+  this->writereg(f_address, message);
+  return;
+}
+
+void ADS122::reset(){
+  Wire.beginTransmission(this->address);
+  Wire.write(byte(ADS122_RESET));
+  Wire.endTransmission();
+  #if ADS122_DEBUG == 1
+  Serial.println("Reset instruction sent");
+  #endif
+}
 
 
 
