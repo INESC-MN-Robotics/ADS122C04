@@ -10,21 +10,15 @@ This is a library to easily program, configure and operate the recently released
 $ git clone https://github.com/pribeiro/ADS122C04.git
 ```
   - Move the contents of the `library` folder to your arduino project folder
-  - Now you are ready to use this library!
+  - You are now ready to use this library!
 
 ## Built With
 
 * [Arduino](https://www.arduino.cc/) - IDE and main hardware platform
 
-## Contributing
-
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
-
 ## Authors
 
 * **Pedro Ribeiro** - [INESC-MN](https://inesc-mn.pt)
-
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
 
 ## License
 
