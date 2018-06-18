@@ -156,6 +156,7 @@ class ADS122 {
     void reset();
     void powerdown();
     void measure(bool pinwait, int drd);
+    void set_up(byte adress, int channel, int gain, bool PGA, int datarate, bool turbo);
     Byte3 read();
 };
 
