@@ -1,4 +1,3 @@
-
 // ADS122C04 single measurement channel
 // by Pedro Ribeiro, INESC-MN, 2018
 
@@ -179,16 +178,6 @@ void loop() {
       //-----------------------------------------------------------------------------------
       //-----------------------------------------R_11--------------------------------------
       //-----------------------------------------------------------------------------------
-        adc_R11.init(byte(ADC_R11_ADDRESS));
-        delay(10);
-        adc_R11.set(byte(ADS122_REG0),byte(ADS122_MUX_IN1|ADS122_GAIN_1|ADS122_PGA_DISABLED)); 
-        delay(10);
-        adc_R11.set(byte(ADS122_REG1),byte(ADS122_DR_90|ADS122_MODE_NORMAL|ADS122_CM_SINGLE|ADS122_VREF_INTERNAL|ADS122_TS_DISABLED));
-        delay(10);
-        adc_R11.set(byte(ADS122_REG2),byte(ADS122_DRDY_MEASURING|ADS122_DCNT_DISABLED|ADS122_CRC_DISABLED|ADS122_BURNOUT_DISABLED|ADS122_IDAC_100));
-        delay(10);
-        adc_R11.set(byte(ADS122_REG3),byte(ADS122_I1MUX_AIN1|ADS122_I2MUX_DISABLED));
-        delay(10);
          
         adc_R11.measure(false, delay_r);
         
@@ -239,13 +228,13 @@ void loop() {
           //---------------------------------------R_00-CH3---------------------------------------
         adc_R11.init(byte(ADC_R11_ADDRESS));
         delay(10);
-        adc_R11.set(byte(ADS122_REG0),byte(ADS122_MUX_IN2|ADS122_GAIN_1|ADS122_PGA_DISABLED)); 
+        adc_R11.set(byte(ADS122_REG0),byte(ADS122_MUX_IN3|ADS122_GAIN_1|ADS122_PGA_DISABLED)); 
         delay(10);
         adc_R11.set(byte(ADS122_REG1),byte(ADS122_DR_90|ADS122_MODE_NORMAL|ADS122_CM_SINGLE|ADS122_VREF_INTERNAL|ADS122_TS_DISABLED));
         delay(10);
         adc_R11.set(byte(ADS122_REG2),byte(ADS122_DRDY_MEASURING|ADS122_DCNT_DISABLED|ADS122_CRC_DISABLED|ADS122_BURNOUT_DISABLED|ADS122_IDAC_100));
         delay(10);
-        adc_R11.set(byte(ADS122_REG3),byte(ADS122_I1MUX_AIN2|ADS122_I2MUX_DISABLED));
+        adc_R11.set(byte(ADS122_REG3),byte(ADS122_I1MUX_AIN3|ADS122_I2MUX_DISABLED));
         delay(10);  
        
         adc_R11.measure(false, delay_r);
