@@ -45,51 +45,57 @@ while x < 120
     R2 = str2double(R3);
     R3 = str2double(R4);
 
-    L0 = (L0*0.001)*2;
-    L1 = (L1*0.001)*2;
-    L2 = (L2*0.001)*2;
-    L3 = (L3*0.001)*2;
-    R0 = (R0*0.001)*2;
-    R1 = (R1*0.001)*2;
-    R2 = (R2*0.001)*2;
-    R3 = (R3*0.001)*2;
+    L0 = (L0*0.001);
+    L1 = (L1*0.001);
+    L2 = (L2*0.001);
+    L3 = (L3*0.001);
+    R0 = (R0*0.001);
+    R1 = (R1*0.001);
+    R2 = (R2*0.001);
+    R3 = (R3*0.001);
 
     %R11-CH0
     if R0 >= 1.0
         R0 = 1.0;
     end
     R0R.FaceColor = [0.2,R0,0.2];
+    drawnow;
     %R11-CH1
     if R1 >= 1.0
         R1 = 1.0;
     end
     R1R.FaceColor = [0.2, R1, 0.2];
+    drawnow;
     %R11-CH2
     if R2 >= 1.0
         R2 = 1.0;
     end
     R2R.FaceColor = [0.2,R2,0.2];
+    drawnow;
     %R11-CH3
     if R3 >= 1.0
         R3 = 1.0;
     end
     R3R.FaceColor = [0.2,R3,0.2];
-
+    drawnow;
     %L00-CH0
     if L0 >= 1.0
         L0 = 1.0;
     end
     L0R.FaceColor = [0.2,L0,0.2];
+    drawnow;
     %L00-CH1
     if L1 >= 1.0
         L1 = 1.0;
     end
     L1R.FaceColor = [0.2,L1,0.2];
+    drawnow;
     %L00-CH2
     if L2 >= 1.0
         L2 = 1.0;
     end
     L2R.FaceColor = [0.2,L2,0.2];
+    drawnow;
     %L00-CH3
     if L3 >= 1.0
         L3 = 1.0;
