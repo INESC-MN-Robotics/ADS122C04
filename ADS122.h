@@ -149,13 +149,15 @@ class ADS122 {
   
   public:
     //VARIABLES
-
+    unsigned long int cal_x;
+    unsigned long int cal_y;
     //FUNCTIONS
     void init(byte f_address);
     void set(byte f_address, byte message);
     void reset();
     void measure(bool pinwait, int drd);
     Byte3 read();
+    void calib();
 };
 
 

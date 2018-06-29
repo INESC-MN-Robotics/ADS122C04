@@ -175,7 +175,32 @@ Byte3 ADS122::read(){
     exp_bytes--;
     result.bytes[exp_bytes] = Wire.read();
   }
-  return(result);
+  return(result);  
+}
+
+void ADS122::calib(){
+  int i;
+  unsigned long int cal;
+  cal = 0;
+
+  this->set(byte(ADS122_REG0),byte(ADS122_MUX_IN2|ADS122_GAIN_1|ADS122_PGA_DISABLED)); 
+  
+  for(i=0;i<100;i++){
+    this->measure(true,7);
+    cal = cal + this->read().code;
+  }
+  this->cal_x = cal/100;
+  cal = 0;
+
+  this->set(byte(ADS122_REG0),byte(ADS122_MUX_IN3|ADS122_GAIN_1|ADS122_PGA_DISABLED)); 
+  
+  for(i=0;i<100;i++){
+    this->measure(true,7);
+    cal = cal + this->read().code;
+  }
+  this->cal_y = cal/100;
+
+  return;
 }
 
 
