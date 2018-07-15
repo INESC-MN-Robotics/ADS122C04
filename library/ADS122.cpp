@@ -66,13 +66,13 @@ void ADS122::writereg(byte f_address, byte message){
 
 
 //--CHECKS IF REGISTER ALREADY EXISTS INSTEAD OF WRITING, BUT IT SLOWS DOWN THE PROGRAM--//
- //if(message == reg[f_address]){
- // #if ADS122_DEBUG==1
- // Serial.print("Instruction was already found on board");
- // #endif
- // return;
- //}
-  
+if(message == reg[f_address >> 2]){
+  #if ADS122_DEBUG==1
+  Serial.print("Instruction was already found on board");
+  #endif
+  return;
+ }
+
   #if ADS122_DEBUG==1
   Serial.println(" ");
   Serial.println("ENTERING WRITEREG");
@@ -263,6 +263,7 @@ void ADS122::set_up(byte adress, int channel, int gain, bool PGA, int datarate, 
         this->set(byte(ADS122_REG1),byte(dr|TURBO|ADS122_CM_SINGLE|ADS122_VREF_INTERNAL|ADS122_TS_DISABLED));
         delay(10);
         this->set(byte(ADS122_REG2),byte(ADS122_DRDY_MEASURING|ADS122_DCNT_DISABLED|ADS122_CRC_DISABLED|ADS122_BURNOUT_DISABLED|current));
+        delay(10);
         this->set(byte(ADS122_REG3),byte(ain|ADS122_I2MUX_DISABLED));
         delay(10);  
   
