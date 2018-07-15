@@ -26,9 +26,9 @@ int gain = 1; // 1, 2, 4, 8, 16, 32, 64, 128 //
 bool turbo = false;
 bool pga = false;
 int datarate = 90;  // 20, 45, 90, 175, 330, 600, 1000 //
-int current = 100;
+int current = 1500;
 
-bool MATLAB = false; //If true, the software will only print numeric values, so its compatible with MATLAB//
+bool MATLAB = true; //If true, the software will only print numeric values, so its compatible with MATLAB//
                      //If false, it makes it so the channel indicators are printed aswell //
 
 
@@ -40,7 +40,7 @@ void setup() {
   Serial.println("Arduino up from powerdown state");
   #endif
   //--------------------------------------------------------------------ADC-R11--------------------------------------------------------------------------
-  adc_R11.set_up(ADC_R11_ADDRESS, 0, gain, pga, datarate, turbo, current);
+  adc_R11.set_up(ADC_R11_ADDRESS, 0, 4, pga, datarate, turbo, current);
   delay(4000);
   
   //--------------------------------------------------------------------ADC-L00--------------------------------------------------------------------------
@@ -82,33 +82,40 @@ void loop() {
         //serial port. 
         if(MATLAB == false){
             Serial.print("LeftCH0> ");
-            overload_check = result.code*2.048*1000/8388608,6;
+            overload_check = result.code*2.048*1000/8388608,9;
             if(overload_check >= 2040){
-              Serial.println("OVL");
+              Serial.print("OVL ");
             }
-            else
-            Serial.println(result.code*2.048*1000/8388608,6); // mV with 6 decimal places
+            else{
+              Serial.print(result.code*2.048*1000/8388608,9); // mV with 9 decimal places
+              Serial.print("  ");
+            }
         }
-        else
-            Serial.println(result.code*2.048*1000/8388608,6); // mV with 6 decimal places
+        else{
+              Serial.println(result.code*2.048*1000/8388608,9); // mV with 9 decimal places
+            }
       
       //---------------------------------------L_00-CH1---------------------------------------
-        adc_L00.set_up(ADC_L00_ADDRESS, 1, gain, pga, datarate, turbo, current);
+        adc_L00.set_up(ADC_L00_ADDRESS, 1, 2, pga, datarate, turbo, current);
        
         adc_L00.measure(false, delay_l);
         
         result = adc_L00.read();
         if(MATLAB == false){
             Serial.print("LeftCH1> ");
-            overload_check = result.code*2.048*1000/8388608,6;
+            overload_check = result.code*2.048*1000/8388608,9;
             if(overload_check >= 2040){
-              Serial.println("OVL");
+              Serial.print("OVL ");
             }
-            else
-            Serial.println(result.code*2.048*1000/8388608,6); // mV with 6 decimal places
+            else{
+              Serial.print(result.code*2.048*1000/8388608,9); // mV with 9 decimal places
+              Serial.print("  ");
+            }
         }
-        else
-            Serial.println(result.code*2.048*1000/8388608,6); // mV with 6 decimal places
+        else{
+              Serial.println(result.code*2.048*1000/8388608,9); // mV with 9 decimal places
+
+            }
         
       //---------------------------------------L_00-CH2---------------------------------------
         adc_L00.set_up(ADC_L00_ADDRESS, 2, gain, pga, datarate, turbo, current);
@@ -119,18 +126,22 @@ void loop() {
         
         if(MATLAB == false){
           Serial.print("LeftCH2> ");
-            overload_check = result.code*2.048*1000/8388608,6;
+            overload_check = result.code*2.048*1000/8388608,9;
             if(overload_check >= 2040){
-              Serial.println("OVL");
+              Serial.print("OVL ");
             }
-            else
-            Serial.println(result.code*2.048*1000/8388608,6); // mV with 6 decimal places
+            else{
+              Serial.print(result.code*2.048*1000/8388608,9); // mV with 9 decimal places
+              Serial.print("  ");
+            }
         }
-        else
-            Serial.println(result.code*2.048*1000/8388608,6); // mV with 6 decimal places
+        else{
+              Serial.println(result.code*2.048*1000/8388608,9); // mV with 9 decimal places
+    
+            }
       
       //---------------------------------------L_00-CH3---------------------------------------
-        adc_L00.set_up(ADC_L00_ADDRESS, 3, gain, pga, datarate, turbo, current); 
+        adc_L00.set_up(ADC_L00_ADDRESS, 3, 2, pga, datarate, turbo, current); 
        
         adc_L00.measure(false, delay_l);
         
@@ -138,15 +149,18 @@ void loop() {
 
         if(MATLAB == false){
             Serial.print("LeftCH3> ");
-            overload_check = result.code*2.048*1000/8388608,6;
+            overload_check = result.code*2.048*1000/8388608,9;
             if(overload_check >= 2040){
-              Serial.println("OVL");
+              Serial.println("OVL ");
             }
-            else
-            Serial.println(result.code*2.048*1000/8388608,6); // mV with 6 decimal places
+            else{
+              Serial.print(result.code*2.048*1000/8388608,9); // mV with 9 decimal places
+              Serial.print("  ");
+            }
         }
-        else
-            Serial.println(result.code*2.048*1000/8388608,6); // mV with 6 decimal places
+        else{
+              Serial.println(result.code*2.048*1000/8388608,9); // mV with 9 decimal places
+            }
       
       //---------------------------------------L_00-CH0 (resart the loop)---------------------------------------
         
@@ -161,37 +175,43 @@ void loop() {
         result = adc_R11.read();
         if(MATLAB == false){
             Serial.print("RightCH0> ");
-            overload_check = result.code*2.048*1000/8388608,6;
+            overload_check = result.code*2.048*1000/8388608,9;
             if(overload_check >= 2040){
-              Serial.println("OVL");
+              Serial.print("OVL ");
             }
-            else
-            Serial.println(result.code*2.048*1000/8388608,6); // mV with 6 decimal places
+            else{
+              Serial.print(result.code*2.048*1000/8388608,9); // mV with 9 decimal places
+              Serial.print("  ");
+            }
         }
-        else
-            Serial.println(result.code*2.048*1000/8388608,6); // mV with 6 decimal places
+       else{
+              Serial.println(result.code*2.048*1000/8388608,9); // mV with 9 decimal places
+            }
       
       
       //---------------------------------------R_00-CH1---------------------------------------
-        adc_R11.set_up(ADC_R11_ADDRESS, 1, gain, pga, datarate, turbo, current);
+        adc_R11.set_up(ADC_R11_ADDRESS, 1, 4, pga, datarate, turbo, current);
         adc_R11.measure(false, delay_r);
         
         result = adc_R11.read();
 
         if(MATLAB == false){
             Serial.print("RightCH1> ");
-            overload_check = result.code*2.048*1000/8388608,6;
+            overload_check = result.code*2.048*1000/8388608,9;
             if(overload_check >= 2040){
-              Serial.println("OVL");
+              Serial.print("OVL ");
             }
-            else
-            Serial.println(result.code*2.048*1000/8388608,6); // mV with 6 decimal places
+                        else{
+              Serial.print(result.code*2.048*1000/8388608,9); // mV with 9 decimal places
+              Serial.print("  ");
+            }
         }
-        else
-            Serial.println(result.code*2.048*1000/8388608,6); // mV with 6 decimal places
+        else{
+              Serial.println(result.code*2.048*1000/8388608,9); // mV with 9 decimal places
+            }
         
         //---------------------------------------R_00-CH2---------------------------------------
-        adc_R11.set_up(ADC_R11_ADDRESS, 2, gain, pga, datarate, turbo, current);
+        adc_R11.set_up(ADC_R11_ADDRESS, 2, 4, pga, datarate, turbo, current);
        
         adc_R11.measure(false, delay_r);
         
@@ -199,18 +219,21 @@ void loop() {
        
         if(MATLAB == false){
             Serial.print("RightCH2> ");
-            overload_check = result.code*2.048*1000/8388608,6;
+            overload_check = result.code*2.048*1000/8388608,9;
             if(overload_check >= 2040){
-              Serial.println("OVL");
+              Serial.print("OVL ");
             }
-            else
-            Serial.println(result.code*2.048*1000/8388608,6); // mV with 6 decimal places
+             else{
+              Serial.print(result.code*2.048*1000/8388608,9); // mV with 9 decimal places
+              Serial.print("  ");
+            }
         }
-        else
-            Serial.println(result.code*2.048*1000/8388608,6); // mV with 6 decimal places
+        else{
+              Serial.println(result.code*2.048*1000/8388608,9); // mV with 9 decimal places
+            }
       
           //---------------------------------------R_00-CH3---------------------------------------
-        adc_R11.set_up(ADC_R11_ADDRESS, 3, gain, pga, datarate, turbo, current);
+        adc_R11.set_up(ADC_R11_ADDRESS, 3, 4, pga, datarate, turbo, current);
        
         adc_R11.measure(false, delay_r);
         
@@ -218,20 +241,26 @@ void loop() {
         
         if(MATLAB == false){
             Serial.print("RightCH3> ");
-            overload_check = result.code*2.048*1000/8388608,6;
+            overload_check = result.code*2.048*1000/8388608,9;
             if(overload_check >= 2040){
-              Serial.println("OVL");
+              Serial.print("OVL ");
+              Serial.println(" ");
             }
-            else
-            Serial.println(result.code*2.048*1000/8388608,6); // mV with 6 decimal places
+            else{
+              Serial.print(result.code*2.048*1000/8388608,9); // mV with 9 decimal places
+              Serial.println(" ");
+            }
         }
-        else
-            Serial.println(result.code*2.048*1000/8388608,6); // mV with 6 decimal places
+        else{
+              Serial.println(result.code*2.048*1000/8388608,9); // mV with 9 decimal places
+
+        }
       
         
       //---------------------------------------R_11-CH0 (restart the loop)---------------------------------------
         
-        adc_R11.set_up(ADC_R11_ADDRESS, 0, gain, pga, datarate, turbo, current);
+        adc_R11.set_up(ADC_R11_ADDRESS, 0, 4, pga, datarate, turbo, current);
+
 }
 
 int delay_gen(){
@@ -256,7 +285,7 @@ int delay_gen(){
          case 600: delay_value = 2; break;
          case 330: delay_value = 4; break;
          case 175: delay_value = 8; break;
-         case 90: delay_value = 20; break;
+         case 90: delay_value = 15; break;
          case 45: delay_value = 50; break;
          case 20: delay_value = 100; break;
     }
