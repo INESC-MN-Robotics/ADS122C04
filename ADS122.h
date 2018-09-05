@@ -31,7 +31,7 @@
 
 //REGISTER 0 OPTIONS
 //MUX
-#define ADS122_MUX_IN0-IN1 0x00
+#define ADS122_MUX_IN0_IN1 0x00
 #define ADS122_MUX_IN0-IN2 0x10
 #define ADS122_MUX_IN0-IN3 0x20
 #define ADS122_MUX_IN1-IN0 0x30
@@ -133,7 +133,7 @@
  
 
 union Byte3 {
-  unsigned long int code;
+  long int code;
   byte bytes[3];
 }; //Union - converts 3 bytes into an unsigned long int
 
