@@ -21,6 +21,8 @@ union Address{
 
 Address voltage;
 
+unsigned int option;
+
 ADS122 adc; //Define an instance of the ADS122 class as a global variable.
 
 void setup() {
@@ -52,39 +54,68 @@ void loop() {
 
   Byte3 result;
 
-  while(Serial.available() > 0){    
-    voltage.value = Serial.parseInt();
-
-    Wire.beginTransmission(0x4C); 
-    Wire.write(byte(0x30));            // sends instruction byte  
-    Wire.write(voltage.code[1]);
-    Wire.write(voltage.code[0]);             // sends potentiometer value byte  
-    Wire.endTransmission();     // stop transmitting
-
-    Serial.print("Voltage: ");
-    Serial.println((double)voltage.value/65535*1.25);
-    delay(1000);
-  }  
-
-  //Order the ADC to measure.
-  //ADS122::measure accepts a bool and an unsigned interger as arguments. 
-  //If the first argument is false, the function will wait for the amount of miliseconds in the second argument
-  //for the measurement to finish
-  //If the first argument is true, the function will wait for the pin in the second argument to go LOW
-  //to acknowledge the measurement is finished
-  adc.measure(true, 7);
-
-  //Order the ADC to transmit the read value.
-  //This function returns a Byte3 union (defined in ADS122.h)
-  result = adc.read();
-
-  //The result is stored in the Byte3 union. To be recognized as an integer,
-  //request the Byte3.code element. This element can then be printed to the 
-  //serial port.
-  if (bitRead(result.bytes[2],7)==1)
-    result.code = result.code | 0xFF000000;
-  
-  Serial.println(result.code,DEC);
+  while(Serial.available() > 0){
+    option = Serial.parseInt();
+    switch(option){
+      case 0:
+        int averages;
+        averages = Serial.parseInt();
+        if(averages != 0){
+          for(int i = 0; i < averages; i++){
+            adc.measure(true,7);
+            result = adc.read();
+            if(bitRead(result.bytes[2],7)==1){
+              result.code = result.code | 0xFF000000;
+            }
+            Serial.println(result.code,DEC);
+          }
+        }
+        else{
+          while(averages == 0){
+            adc.measure(true,7);
+            result = adc.read();
+            if(bitRead(result.bytes[2],7)==1){
+              result.code = result.code | 0xFF000000;
+            }
+            Serial.println(result.code,DEC);
+            while(Serial.available() > 0){
+              averages = Serial.parseInt();
+            }
+          }
+        }
+        break;
+      case 1:
+        int temp;
+        temp = voltage.value;
+        voltage.value = Serial.parseInt();
+        if(voltage.value != 0){
+          Wire.beginTransmission(0x4C); 
+          Wire.write(byte(0x30));            // sends instruction byte  
+          Wire.write(voltage.code[1]);
+          Wire.write(voltage.code[0]);             // sends potentiometer value byte  
+          Wire.endTransmission();     // stop transmitting
+      
+          Serial.print("Voltage: ");
+          Serial.println((double)voltage.value/65535*1.25);
+          delay(1000);
+          for(int i = 0; i < 10; i++){
+            adc.measure(true,7);
+            result = adc.read();
+            if(bitRead(result.bytes[2],7)==1){
+              result.code = result.code | 0xFF000000;
+            }
+            Serial.println(result.code,DEC);
+          }
+        }
+        else{
+          voltage.value = temp;
+        }
+        break;
+      default:
+        Serial.println("Unrecognized");
+        break;
+    }
+  }
 }
 
 
