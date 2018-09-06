@@ -36,11 +36,11 @@ void setup() {
   delay(1000);
   //Configure register 0. This configuration configures the ADC to measure the voltage from channel 3 as
   //a single ended input, with gain 1 and disables the internal programmable gain amplifier (PGA)
-  adc.set(byte(ADS122_REG0),byte(ADS122_MUX_IN0_IN1|ADS122_GAIN_2|ADS122_PGA_DISABLED)); 
+  adc.set(byte(ADS122_REG0),byte(ADS122_MUX_IN0_IN1|ADS122_GAIN_16|ADS122_PGA_ENABLED)); 
   delay(100);
   //Configure register 1. This sets the acquisition speed to 2000 SPS (2x1000 SPS, because TURBO mode is on), the
   //measurement mode to single, disables the internal temperature sensor and sets the ADC voltage reference to the internal reference (2.048 V)
-  adc.set(byte(ADS122_REG1),byte(ADS122_DR_175|ADS122_MODE_NORMAL|ADS122_CM_SINGLE|ADS122_VREF_INTERNAL|ADS122_TS_DISABLED));
+  adc.set(byte(ADS122_REG1),byte(ADS122_DR_20|ADS122_MODE_NORMAL|ADS122_CM_SINGLE|ADS122_VREF_EXTERNAL|ADS122_TS_DISABLED));
   delay(1000);
 }
 
