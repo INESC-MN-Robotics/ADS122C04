@@ -59,8 +59,10 @@ void loop() {
     switch(option){
       case 0:
         int averages;
+        unsigned int tempo;
         averages = Serial.parseInt();
         if(averages != 0){
+          tempo = millis();
           for(int i = 0; i < averages; i++){
             adc.measure(true,7);
             result = adc.read();
@@ -69,6 +71,7 @@ void loop() {
             }
             Serial.println(result.code,DEC);
           }
+          Serial.println(millis() - tempo);
         }
         else{
           while(averages == 0){
