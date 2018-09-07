@@ -30,7 +30,7 @@ void setup() {
   delay(100);
   //Configure register 1. This sets the acquisition speed to 2000 SPS (2x1000 SPS, because TURBO mode is on), the
   //measurement mode to single, disables the internal temperature sensor and sets the ADC voltage reference to the internal reference (2.048 V)
-  adc.set(byte(ADS122_REG1),byte(ADS122_DR_1000|ADS122_MODE_TURBO|ADS122_CM_SINGLE|ADS122_VREF_INTERNAL|ADS122_TS_DISABLED));
+  adc.set(byte(ADS122_REG1),byte(ADS122_DR_20|ADS122_MODE_NORMAL|ADS122_CM_SINGLE|ADS122_VREF_INTERNAL|ADS122_TS_DISABLED));
   delay(1000);
 }
 
@@ -42,13 +42,15 @@ void loop() {
 
   Byte3 result;
 
+  adc.set(byte(ADS122_REG0),byte(ADS122_MUX_IN2|ADS122_GAIN_1|ADS122_PGA_DISABLED)); 
+
   //Order the ADC to measure.
   //ADS122::measure accepts a bool and an unsigned interger as arguments. 
   //If the first argument is false, the function will wait for the amount of miliseconds in the second argument
   //for the measurement to finish
   //If the first argument is true, the function will wait for the pin in the second argument to go LOW
   //to acknowledge the measurement is finished
-  adc.measure(false, 50);
+  adc.measure(false, 100);
 
   //Order the ADC to transmit the read value.
   //This function returns a Byte3 union (defined in ADS122.h)
@@ -57,8 +59,16 @@ void loop() {
   //The result is stored in the Byte3 union. To be recognized as an integer,
   //request the Byte3.code element. This element can then be printed to the 
   //serial port. 
-  Serial.println(result.code,DEC);
+  Serial.print((double)result.code/8388608*2.048,DEC);
+  Serial.print("\t");
 
+  adc.set(byte(ADS122_REG0),byte(ADS122_MUX_IN3|ADS122_GAIN_1|ADS122_PGA_DISABLED)); 
+
+  adc.measure(false, 100);
+
+  result = adc.read();
+
+  Serial.println((double)result.code/8388608*2.048, DEC);
 }
 
 
