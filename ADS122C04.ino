@@ -10,6 +10,7 @@
 
 //Required libraries
 #include <Wire.h> //Controls and mediates I2C communication
+#include <Keyboard.h>
 #include "ADS122.h" //Allows ADS122C04 programming
 
 #define ADC_ADDRESS 0x40 //ADS122C04 I2C address
@@ -18,6 +19,7 @@ ADS122 adc; //Define an instance of the ADS122 class as a global variable.
 
 void setup() {
   Serial.begin(115200); //Initialize UART communication
+  Keyboard.begin();
   Wire.begin(); //Initialize I2C communication
   #if ADS122_DEBUG==1 
   Serial.println("Arduino up from powerdown state");
@@ -46,12 +48,28 @@ byte val = 0;
 byte response = 3;
 Byte3 result;
 unsigned long int lo = 0;
+long int ubound = 3000000, lbound = 2900000;
 void loop() {
 
   Byte3 result;
   long int res;
 
   adc.set(byte(ADS122_REG0),byte(ADS122_MUX_IN3|ADS122_GAIN_1|ADS122_PGA_DISABLED)); 
+
+  if(Serial.available()){
+    lbound = Serial.parseInt();
+    ubound = Serial.parseInt();
+    Serial.println("New calibration received:");
+    Serial.print("Lower bound:");
+    Serial.print(lbound, DEC);
+    Serial.print(" | Upper bound:");
+    Serial.println(ubound,DEC);
+    while(Serial.available()){
+      Serial.println(Serial.readString());
+    }
+    Serial.flush();
+    delay(2000);
+  }
 
   //Order the ADC to measure.
   //ADS122::measure accepts a bool and an unsigned interger as arguments. 
@@ -70,13 +88,19 @@ void loop() {
   //serial port. 
   res = result.code;
   Serial.print(result.code);
-  Serial.print("\t");
-  if(res > 5715000)
-    Serial.println("1");
-  else if (res < 5640000)
-    Serial.println("-1");
-  else
-    Serial.println("0");
+  Serial.println();
+  if(res > ubound){
+    Keyboard.press(KEY_UP_ARROW);
+    //Serial.println("1");
+  }
+  else if (res < lbound){
+    Keyboard.press(KEY_DOWN_ARROW);
+    //Serial.println("-1");
+  }
+  else{
+    Keyboard.releaseAll();
+    //Serial.println("0");
+  }
   //Serial.println(res,DEC);
   //Serial.print("\t");
 
