@@ -71,7 +71,7 @@ void loop() {
             }
             Serial.println(result.code,DEC);
           }
-          Serial.println(millis() - tempo);
+          //Serial.println(millis() - tempo);
         }
         else{
           while(averages == 0){
