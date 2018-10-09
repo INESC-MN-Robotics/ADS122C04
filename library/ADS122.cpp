@@ -63,16 +63,6 @@ void ADS122::writereg(byte f_address, byte message){
   //Does not return 
 
   byte result;
-
-
-//--CHECKS IF REGISTER ALREADY EXISTS INSTEAD OF WRITING, BUT IT SLOWS DOWN THE PROGRAM--//
-if(message == reg[f_address >> 2]){
-  #if ADS122_DEBUG==1
-  Serial.print("Instruction was already found on board");
-  #endif
-  return;
- }
-
   #if ADS122_DEBUG==1
   Serial.println(" ");
   Serial.println("ENTERING WRITEREG");
@@ -132,9 +122,7 @@ void ADS122::init(byte f_address){
   this->reg[1] = this->readreg(ADS122_REG0);
 }
 
-
-//Set is now private//
- void ADS122::set(byte f_address, byte message){
+void ADS122::set(byte f_address, byte message){
   this->writereg(f_address, message);
   return;
 }
@@ -148,29 +136,17 @@ void ADS122::reset(){
   #endif
 }
 
-void ADS122::powerdown(){
-	Wire.beginTransmission(this->address);
-	Wire.write(byte(ADS122_POWERDOWN)); //Byte value being 0x02, also works with 0x03, consult the "Commands" section in ADS122.h
-	Wire.endTransmission();
-	#if ADS122_DEBUG == 1
-	Serial.println(" ");
-	Serial.println("Powerdone instruction sent");
-	Serial.print("Instruction sent: 0x");
-	Serial.print(byte(ADS122_POWERDOWN));
-	#endif
-}
-
 void ADS122::measure(bool pinwait, int drd){
   Wire.beginTransmission(this->address);
   Wire.write(byte(ADS122_START));
   Wire.endTransmission();
-  //#if ADS122_DEBUG == 1
-  //Serial.println(" ");
-  // <<<< delay(30); >>>> IN ORDER TO WORK?
-  //Serial.print("Intruction sent: 0x");
-  //Serial.println(byte(ADS122_START));
-  //Serial.println("Starting measurement");
-  //#endif
+  #if ADS122_DEBUG == 1
+  Serial.println(" ");
+  Serial.println("ENTERING MEASURE");
+  Serial.print("Intruction sent: 0x");
+  Serial.println(byte(ADS122_START));
+  Serial.println("Starting measurement");
+  #endif
 
   //If pinwait is true (use pin as way of knowing if measurement is complete), wait for DRDY pin to go low
   if(pinwait == true)
@@ -202,72 +178,6 @@ Byte3 ADS122::read(){
   return(result);
 }
 
-void ADS122::set_up(byte adress, int channel, int gain, bool PGA, int datarate, bool turbo, int curr){
-                              
-        this->init(adress);
-        delay(10);
-        byte ch, ain, gn, pga, dr, TURBO, current;
-        switch(channel){
-          case 0: ch= 0x80; ain= 0x20; break;
-          case 1: ch= 0x90; ain= 0x40; break;
-          case 2: ch= 0xA0; ain = 0x60; break;
-          case 3: ch= 0xB0; ain = 0x80; break;
-          default: Serial.print("Error: Channel not found, closing function"); return;
-        }
-        
-        switch(curr){
-          case 0: current = 0x00; break;
-          case 10: current = 0x01; break;
-          case 50: current = 0x02; break;
-          case 100: current = 0x03; break;
-          case 250: current = 0x04; break;
-          case 500: current = 0x05; break;
-          case 1000: current = 0x06; break;
-          case 1500: current = 0x07; break;
-          default: Serial.print("Error: Invalid Current, closing function"); return;
-        }
-        switch(gain){
-          case 1: gn= 0x00; break;
-          case 2: gn= 0x02 ;break;
-          case 4: gn= 0x04; break;
-          case 8: gn= 0x06; break;
-          case 16: gn = 0x08; break;
-          case 32: gn= 0x0A; break;
-          case 64: gn= 0x0C; break;
-          case 128: gn= 0x0E; break;
-          default: Serial.print("Error: Gain value not found, closing function"); return;
-        }
-        switch(PGA){
-          case true: pga = 0x00; break;
-          case false: pga = 0x01; break;
-          default: Serial.print("Invalid PGA boolean argument, closing function"); return;
-        }
-        switch(datarate){
-          case 20: dr= 0x00; break;
-          case 45: dr= 0x20; break;
-          case 90: dr= 0x40; break;
-          case 175: dr= 0x60; break;
-          case 330: dr= 0x80; break;
-          case 600: dr= 0xA0; break;
-          case 1000: dr= 0xC0; break;
-          default: Serial.print("Error: Invalid Data Rate value, closing function"); return;
-        }
-        switch(turbo){
-          case true: TURBO= 0x10; break;
-          case false: TURBO= 0x00; break;
-          default: Serial.print("Invalid turbo boolean argument, closing function"); return;
-        }
-
-        this->set(byte(ADS122_REG0),byte(ch|gn|pga)); 
-        delay(10);
-        this->set(byte(ADS122_REG1),byte(dr|TURBO|ADS122_CM_SINGLE|ADS122_VREF_INTERNAL|ADS122_TS_DISABLED));
-        delay(10);
-        this->set(byte(ADS122_REG2),byte(ADS122_DRDY_MEASURING|ADS122_DCNT_DISABLED|ADS122_CRC_DISABLED|ADS122_BURNOUT_DISABLED|current));
-        delay(10);
-        this->set(byte(ADS122_REG3),byte(ain|ADS122_I2MUX_DISABLED));
-        delay(10);  
-  
-}
 
 
 

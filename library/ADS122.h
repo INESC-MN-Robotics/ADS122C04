@@ -24,7 +24,7 @@
 //COMMANDS
 #define ADS122_RESET 0x06
 #define ADS122_START 0x08
-#define ADS122_POWERDOWN 0x02  // Can also be 0x03 // It was 0x04 but that is 0100, and not 0010/0011 (aka the correct POWERDOWN code following the datasheet//
+#define ADS122_POWERDOWN 0x04
 #define ADS122_RDATA 0x10
 #define ADS122_READREG 0x20
 #define ADS122_WRITEREG 0x40
@@ -146,19 +146,18 @@ class ADS122 {
     byte readreg(byte f_address);
     void writereg(byte f_address, byte message);
     void panic();
-    void set(byte f_address, byte message);
   
   public:
     //VARIABLES
 
     //FUNCTIONS
     void init(byte f_address);
+    void set(byte f_address, byte message);
     void reset();
-    void powerdown();
     void measure(bool pinwait, int drd);
-    void set_up(byte adress, int channel, int gain, bool PGA, int datarate, bool turbo, int curr);
     Byte3 read();
 };
 
 
 #endif
+
