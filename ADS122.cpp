@@ -156,6 +156,12 @@ void ADS122::measure(bool pinwait, int drd){
   }
 }
 
+void ADS122::powerdown(){
+  Wire.beginTransmission(this->address);
+  Wire.write(ADS122_POWERDOWN);
+  Wire.endTransmission();
+}
+
 Byte3 ADS122::read(){
   Byte3 result;
   result.code = 0;
@@ -177,7 +183,3 @@ Byte3 ADS122::read(){
   }
   return(result);
 }
-
-
-
-

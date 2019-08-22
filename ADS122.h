@@ -13,7 +13,7 @@
 #include <Wire.h>
 
 //DEBUGGING
-#define ADS122_DEBUG 0 //Define this macro as 1 to enable verbose output
+#define ADS122_DEBUG 0//Define this macro as 1 to enable verbose output
 
 //REGISTER ADDRESSES
 #define ADS122_REG0 0x0 
@@ -32,13 +32,13 @@
 //REGISTER 0 OPTIONS
 //MUX
 #define ADS122_MUX_IN0_IN1 0x00
-#define ADS122_MUX_IN0-IN2 0x10
-#define ADS122_MUX_IN0-IN3 0x20
-#define ADS122_MUX_IN1-IN0 0x30
-#define ADS122_MUX_IN1-IN2 0x40
-#define ADS122_MUX_IN1-IN3 0x50
-#define ADS122_MUX_IN2-IN3 0x60
-#define ADS122_MUX_IN3-IN2 0x70
+#define ADS122_MUX_IN0_IN2 0x10
+#define ADS122_MUX_IN0_IN3 0x20
+#define ADS122_MUX_IN1_IN0 0x30
+#define ADS122_MUX_IN1_IN2 0x40
+#define ADS122_MUX_IN1_IN3 0x50
+#define ADS122_MUX_IN2_IN3 0x60
+#define ADS122_MUX_IN3_IN2 0x70
 #define ADS122_MUX_IN0 0x80
 #define ADS122_MUX_IN1 0x90
 #define ADS122_MUX_IN2 0xA0
@@ -155,9 +155,9 @@ class ADS122 {
     void set(byte f_address, byte message);
     void reset();
     void measure(bool pinwait, int drd);
+    void powerdown();
     Byte3 read();
 };
 
 
 #endif
-
