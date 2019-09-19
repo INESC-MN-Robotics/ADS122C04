@@ -1,4 +1,3 @@
-////////////////////////////////////////////////////////////////
 // ADS122.cpp
 // Arduino library to program and configure the ADS122C04 chip from TEXAS INSTRUMENTS
 // Developed by: Pedro Ribeiro
