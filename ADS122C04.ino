@@ -49,7 +49,7 @@ void setup() {
   delay(100);
   //Configure register 1. This sets the acquisition speed to 2000 SPS (2x1000 SPS, because TURBO mode is on), the
   //measurement mode to single, disables the internal temperature sensor and sets the ADC voltage reference to the internal reference (2.048 V)
-  adc.set(byte(ADS122_REG1),byte(ADS122_DR_20|ADS122_MODE_NORMAL|ADS122_CM_SINGLE|ADS122_VREF_INTERNAL|ADS122_TS_DISABLED));
+  adc.set(byte(ADS122_REG1),byte(ADS122_DR_1000|ADS122_MODE_TURBO|ADS122_CM_SINGLE|ADS122_VREF_INTERNAL|ADS122_TS_DISABLED));
   delay(1000);
   adc.powerdown();
   //attachInterrupt(digitalPinToInterrupt(DRD_PIN), show_result,LOW);
@@ -75,7 +75,6 @@ void loop() {
         unsigned int tempo;
         averages = Serial.parseInt();
         if(averages != 0){
-          tempo = millis();
           for(int i = 0; i < averages; i++){
             adc.measure(true ,7);
             result = adc.read();  
@@ -84,7 +83,6 @@ void loop() {
             }
             Serial.println(result.code,DEC);
           }
-          //Serial.println(millis() - tempo);
         }
         else{
           while(averages == 0){
@@ -132,11 +130,12 @@ void loop() {
         break;
       case 2:
         if(!burst){
-          adc.set(byte(ADS122_REG1),byte(ADS122_DR_20|ADS122_MODE_TURBO|ADS122_CM_CONTINUOUS|ADS122_VREF_EXTERNAL|ADS122_TS_DISABLED));
+          adc.set(byte(ADS122_REG1),byte(ADS122_DR_1000|ADS122_MODE_TURBO|ADS122_CM_CONTINUOUS|ADS122_VREF_EXTERNAL|ADS122_TS_DISABLED)); //Change configuration here for dual acquisition
           burst = true;
           adc.measure(false, 1);
           while(Serial.available() > 0)
             Serial.read();
+          
         }
         else{
           adc.powerdown();
