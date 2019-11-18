@@ -27,7 +27,7 @@ union Address{
 
 int voltage1, voltage2;
 
-unsigned int option;
+unsigned int option, optionPrevious;
 unsigned long startTime;
 
 ADS122 adc; //Define an instance of the ADS122 class as a global variable.
@@ -41,7 +41,7 @@ byte dualMode0 = byte(ADS122_MUX_IN1_IN0|ADS122_GAIN_1|ADS122_PGA_ENABLED); //Se
 byte dualMode1 =  byte(ADS122_MUX_IN2_IN3|ADS122_GAIN_1|ADS122_PGA_ENABLED); //Note that an increased delay occurs to multiplex the channels!
 
 void setup() {
-  Serial.begin(2000000); //Initialize UART communication
+  Serial.begin(115200); //Initialize UART communication
   pinMode(8,OUTPUT);
   digitalWrite(8,HIGH);
   pinMode(DRD_PIN, INPUT);
@@ -79,6 +79,7 @@ void loop() {
   Byte3 result;
 
   while(Serial.available() > 0){
+    optionPrevious = option;
     option = Serial.parseInt();
     switch(option){
       case 0: 
@@ -142,23 +143,39 @@ void loop() {
         voltage2 = Serial.parseInt();
         voltage1 = Serial.parseInt();
         
-        Serial.println(voltage2, DEC);
+        Serial.print(voltage2, DEC);
         Serial.print("\t");
-        Serial.print(voltage1, DEC);
+        Serial.println(voltage1, DEC);
         //delay(1000);
 
         if(voltage1 > 0 && voltage2 == 0){
           dac.writeDAC(voltage1,ALL_DACS);
+          #if MAIN_DEBUG == 1
+          Serial.println("BOTH DACS - SAME VALUE");
+          delay(1000);
+          #endif
         }
         else if(voltage1 > 0 && voltage2 > 0){
           dac.writeDAC(voltage1,DAC_A);
           dac.writeDAC(voltage2,DAC_B);
+          #if MAIN_DEBUG == 1
+          Serial.println("BOTH DACS - DIFFERENT VALUES");
+          delay(1000);
+          #endif
         }
         else if(voltage1 < 0 && voltage2 > 0){
           dac.writeDAC(voltage2,DAC_B);
+          #if MAIN_DEBUG == 1
+          Serial.println("DAC B ONLY");
+          delay(1000);
+          #endif
         }
         else if(voltage1 > 0 && voltage2 < 0){
           dac.writeDAC(voltage1,DAC_A);
+          #if MAIN_DEBUG
+          Serial.println("DAC A ONLY");
+          delay(1000);
+          #endif
         }
         else{
           Serial.println("Unknown DAC configuration - ignored");
@@ -168,6 +185,9 @@ void loop() {
         Serial.println("DAC CONFIG -> OUT!");
         delay(1000);
         #endif
+        while(Serial.available())
+          Serial.read();
+        option = optionPrevious;
         break;
       default:
         Serial.println("Unrecognized");
